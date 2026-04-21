@@ -1,1 +1,1 @@
-# Personal_workout_app
+# workout-app
