@@ -464,13 +464,114 @@ const ROUTINE_SUPERSET = [
   ]},
 ];
 
+/* Upper/Lower routine: 3 upper + 3 lower days, true 45/45 weekly split.
+   Keeps the 2-5-15 session rules (5 hard sets/muscle, 15/day). Majors hit 2×;
+   biceps/triceps get 1 direct block/week plus heavy indirect press/pull volume. */
+const ROUTINE_UL = [
+  {id:"ul1",day:1,type:"upper",short:"Upper A",
+   title:"Upper A — Chest · Back · Triceps",sub:"15 sets · 5 per muscle · horizontal",
+   ss:[
+    {lbl:"Chest",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Barbell bench press · 6–8",sets:2},
+      {t:"push",n:"Incline DB press · 8–10",sets:2},
+      {t:"push",n:"Cable fly · 12–15",sets:1}]},
+    {lbl:"Back",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Barbell bent-over row · 6–8",sets:2},
+      {t:"pull",n:"Lat pulldown · 8–10",sets:2},
+      {t:"pull",n:"Straight-arm pulldown · 12–15",sets:1}]},
+    {lbl:"Triceps",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Close-grip bench press · 8–10",sets:2},
+      {t:"push",n:"Rope pushdown · 12–15",sets:2},
+      {t:"push",n:"Overhead cable extension · 12–15",sets:1}]},
+  ]},
+  {id:"ul2",day:2,type:"lower",short:"Lower A",
+   title:"Lower A — Quads · Hamstrings · Calves",sub:"15 sets · 5 per muscle · quad focus",
+   ss:[
+    {lbl:"Quads",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Back squat · 6–8",sets:2},
+      {t:"push",n:"Leg press · 10–12",sets:2},
+      {t:"push",n:"Leg extension · 15",sets:1}]},
+    {lbl:"Hamstrings",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Romanian deadlift (moderate) · 8–10",sets:2},
+      {t:"pull",n:"Seated leg curl · 10–12",sets:2},
+      {t:"pull",n:"Lying leg curl · 15",sets:1}]},
+    {lbl:"Calves",reps:"5 sets",defSets:3,ex:[
+      {t:"push",n:"Standing calf raise · 10–12",sets:3},
+      {t:"push",n:"Seated calf raise · 15–20",sets:2}]},
+  ]},
+  {id:"ul3",day:3,type:"upper",short:"Upper B",
+   title:"Upper B — Shoulders · Back · Biceps",sub:"15 sets · 5 per muscle · vertical",
+   ss:[
+    {lbl:"Shoulders",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Standing barbell overhead press · 6–8",sets:2},
+      {t:"push",n:"DB lateral raise · 12–15",sets:2},
+      {t:"push",n:"Rear-delt fly · 15",sets:1}]},
+    {lbl:"Back",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Weighted pull-up · 6–8",sets:2},
+      {t:"pull",n:"Chest-supported row · 8–10",sets:2},
+      {t:"pull",n:"Face pull · 15",sets:1}]},
+    {lbl:"Biceps",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Barbell curl · 8–10",sets:2},
+      {t:"pull",n:"Incline DB curl · 10–12",sets:2},
+      {t:"pull",n:"Hammer curl · 12–15",sets:1}]},
+  ]},
+  {id:"ul4",day:4,type:"lower",short:"Lower B",
+   title:"Lower B — Hamstrings · Glutes · Calves",sub:"15 sets · 5 per muscle · posterior",
+   ss:[
+    {lbl:"Hamstrings",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Romanian deadlift (moderate) · 8–10",sets:2},
+      {t:"pull",n:"Lying leg curl · 10–12",sets:2},
+      {t:"pull",n:"Good morning (light) · 10–12",sets:1}]},
+    {lbl:"Glutes",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Barbell hip thrust · 8–10",sets:2},
+      {t:"push",n:"Bulgarian split squat · 10–12",sets:2},
+      {t:"pull",n:"Cable pull-through · 15",sets:1}]},
+    {lbl:"Calves",reps:"5 sets",defSets:3,ex:[
+      {t:"push",n:"Seated calf raise · 15–20",sets:3},
+      {t:"push",n:"Standing calf raise · 10–12",sets:2}]},
+  ]},
+  {id:"ul5",day:5,type:"upper",short:"Upper C",
+   title:"Upper C — Chest · Shoulders · Core",sub:"15 sets · 5 per muscle · balance",
+   ss:[
+    {lbl:"Chest",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Incline barbell press · 6–8",sets:2},
+      {t:"push",n:"Weighted dip · 8–10",sets:2},
+      {t:"push",n:"Pec-deck fly · 12–15",sets:1}]},
+    {lbl:"Shoulders",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Seated DB shoulder press · 8–10",sets:2},
+      {t:"push",n:"Cable lateral raise · 12–15",sets:2},
+      {t:"pull",n:"Face pull · 15",sets:1}]},
+    {lbl:"Core",reps:"5 sets",defSets:2,ex:[
+      {t:"functional",n:"Hanging leg raise · 12–15",sets:2},
+      {t:"functional",n:"Cable crunch · 12–15",sets:2},
+      {t:"functional",n:"Pallof press · 12 / side",sets:1}]},
+  ]},
+  {id:"ul6",day:6,type:"lower",short:"Lower C",
+   title:"Lower C — Glutes · Quads · Core",sub:"15 sets · 5 per muscle · glute focus",
+   ss:[
+    {lbl:"Glutes",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Barbell hip thrust · 8–10",sets:2},
+      {t:"push",n:"DB walking lunge · 10–12",sets:2},
+      {t:"pull",n:"Hip abduction machine · 15",sets:1}]},
+    {lbl:"Quads",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Hack squat · 8–10",sets:2},
+      {t:"push",n:"Leg extension · 12–15",sets:2},
+      {t:"push",n:"Goblet squat · 15",sets:1}]},
+    {lbl:"Core",reps:"5 sets",defSets:2,ex:[
+      {t:"functional",n:"Ab-wheel rollout · 10–12",sets:2},
+      {t:"functional",n:"Weighted Russian twist · 15 / side",sets:2},
+      {t:"functional",n:"Side plank · 30–45 s / side",sets:1}]},
+  ]},
+];
+
 /* ═══════════════ ROUTINES REGISTRY ═══════════════ */
 const ROUTINES = {
-  "215":      {name:"2-5-15",  meta:"PPL ×2",   days:ROUTINE_215},
-  "superset": {name:"Superset",meta:"Backup",   days:ROUTINE_SUPERSET},
+  "215":      {name:"2-5-15",     meta:"PPL ×2",  days:ROUTINE_215},
+  "ul":       {name:"Upper/Lower",meta:"3+3",     days:ROUTINE_UL},
+  "superset": {name:"Superset",   meta:"6-day SS",days:ROUTINE_SUPERSET},
 };
-const ROUTINE_ORDER = ["215","superset"];
-function allDays(){ return [...ROUTINE_215, ...ROUTINE_SUPERSET]; }
+const ROUTINE_ORDER = ["215","ul","superset"];
+function allDays(){ return [...ROUTINE_215, ...ROUTINE_UL, ...ROUTINE_SUPERSET]; }
 function findDay(id){ return allDays().find(d=>d.id===id); }
 
 /* ═══════════════ STATE ═══════════════ */
@@ -903,8 +1004,15 @@ document.getElementById("t-skip").addEventListener("click",()=>{ clearInterval(t
 document.getElementById("cal-prev").addEventListener("click",()=>{ calViewDate.setMonth(calViewDate.getMonth()-1); renderCalendar(); });
 document.getElementById("cal-next").addEventListener("click",()=>{ calViewDate.setMonth(calViewDate.getMonth()+1); renderCalendar(); });
 
-/* Service worker */
-if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+/* Service worker — auto-reloads the page once a new version activates */
+if("serviceWorker" in navigator){
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+  navigator.serviceWorker.addEventListener("controllerchange", ()=>{
+    // Only reload for an *update* (a controller already existed), never on first install
+    if(hadController && !window.__swReloaded){ window.__swReloaded=true; location.reload(); }
+  });
+}
 
 goHome();
 </script>
