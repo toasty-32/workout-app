@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.toasty32.workout",
+        "sha256_cert_fingerprints": ["20:7A:CE:38:61:48:72:5B:90:EB:BD:AA:A2:07:66:78:4E:8D:D9:C5:EF:BE:C2:0D:23:66:D4:B4:9F:1E:88:10"]
+      }
+    }]
