@@ -1,25 +1,35 @@
 {
+  "id": "/workout-app/",
   "name": "Workout Tracker",
   "short_name": "Workout",
-  "description": "6-Day Superset Training Plan — Push/Pull Upper/Lower Split",
+  "description": "2-5-15 & Upper/Lower training plans with per-set logging, calendar history, and progress tracking.",
   "start_url": "/workout-app/",
   "scope": "/workout-app/",
   "display": "standalone",
   "background_color": "#0D1117",
   "theme_color": "#0D1117",
   "orientation": "portrait",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["health", "fitness", "lifestyle"],
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
