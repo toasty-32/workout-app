@@ -72,6 +72,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .qs-card{text-align:center;padding:10px 4px;border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer;transition:opacity .15s}
 .qs-card.upper{background:var(--blueDim);border-color:var(--blueDimBorder)}
 .qs-card.lower{background:var(--amberDim);border-color:var(--amberDimBorder)}
+.qs-card.push{background:var(--pushBg);border-color:var(--push)}
+.qs-card.pull{background:var(--pullBg);border-color:var(--pull)}
+.qs-card.legs{background:var(--amberDim);border-color:var(--amberDimBorder)}
+.qs-card.push .qs-type{color:var(--push)}
+.qs-card.pull .qs-type{color:var(--pull)}
+.qs-card.legs .qs-type{color:var(--amber)}
 .qs-card.done{opacity:.4}
 .qs-type{font-size:10px;font-weight:700;display:block;text-transform:uppercase;letter-spacing:.05em}
 .qs-card.upper .qs-type{color:var(--blue)}
@@ -83,6 +89,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .dc-num{width:36px;height:36px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
 .day-card.upper .dc-num{background:var(--blueDim);color:var(--blue)}
 .day-card.lower .dc-num{background:var(--amberDim);color:var(--amber)}
+.day-card.push .dc-num{background:var(--pushBg);color:var(--push)}
+.day-card.pull .dc-num{background:var(--pullBg);color:var(--pull)}
+.day-card.legs .dc-num{background:var(--amberDim);color:var(--amber)}
 .dc-info{flex:1;min-width:0}
 .dc-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dc-sub{font-size:11px;color:var(--text2);margin-top:2px}
@@ -94,6 +103,17 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .prog-fill{height:100%;border-radius:2px;transition:width .3s}
 .prog-fill.upper{background:var(--blue)}
 .prog-fill.lower{background:var(--amber)}
+.prog-fill.push{background:var(--push)}
+.prog-fill.pull{background:var(--pull)}
+.prog-fill.legs{background:var(--amber)}
+
+/* ── ROUTINE SWITCHER ── */
+.routine-switch{display:flex;gap:6px;padding:14px 14px 0}
+.rs-btn{flex:1;position:relative;background:var(--bg2);border:1px solid var(--border);color:var(--text2);font-size:12px;font-weight:600;padding:9px 6px;border-radius:var(--r-sm);cursor:pointer;text-align:center;line-height:1.3;transition:background .15s}
+.rs-btn .rs-name{display:block}
+.rs-btn .rs-meta{display:block;font-size:9px;font-weight:500;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
+.rs-btn.active{background:var(--blueDim);border-color:var(--blue);color:var(--blue)}
+.rs-btn.active .rs-meta{color:var(--blue)}
 .prog-fill.complete{background:var(--green)}
 .dc-chev{color:var(--text3);font-size:16px}
 
@@ -178,6 +198,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .cal-dot{width:5px;height:5px;border-radius:50%}
 .cal-day.upper .cal-dot{background:var(--blue)}
 .cal-day.lower .cal-dot{background:var(--amber)}
+.cal-day.push .cal-dot{background:var(--push)}
+.cal-day.pull .cal-dot{background:var(--pull)}
+.cal-day.legs .cal-dot{background:var(--amber)}
 .cal-day.has-workout .cal-dn{font-weight:700}
 .cal-day.selected{background:var(--bg3);border-color:var(--border2)}
 .cal-log-title{font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text2)}
@@ -233,6 +256,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 
   <!-- HOME -->
   <div id="home-screen" class="screen active">
+    <div class="routine-switch" id="routine-switch"></div>
     <div class="quick-strip" id="quick-strip"></div>
     <div class="sec-label">Select Workout</div>
     <div id="day-list"></div>
@@ -280,8 +304,110 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 </div>
 
 <script>
-/* ═══════════════ PLAN DATA (no day-of-week) ═══════════════ */
-const PLAN = [
+/* ═══════════════ PLAN DATA ═══════════════ */
+/* Active routine: 2-5-15 method (PPL ×2). Each muscle 2×/week, 5 hard sets/muscle, 15 sets/day.
+   Per-exercise set counts live on ex.sets (sum to 5 per muscle). */
+const ROUTINE_215 = [
+  {id:"p1",day:1,type:"push",short:"Push A",
+   title:"Push A — Chest · Shoulders · Triceps",sub:"15 sets · 5 per muscle",
+   ss:[
+    {lbl:"Chest",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Barbell bench press · 6–8",sets:2},
+      {t:"push",n:"Incline DB press · 8–10",sets:2},
+      {t:"push",n:"Pec-deck / cable fly · 12–15",sets:1}]},
+    {lbl:"Shoulders",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Seated DB shoulder press · 8–10",sets:2},
+      {t:"push",n:"DB lateral raise · 12–15",sets:2},
+      {t:"push",n:"Cable lateral raise · 15",sets:1}]},
+    {lbl:"Triceps",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Close-grip bench press · 8–10",sets:2},
+      {t:"push",n:"Rope pushdown · 12–15",sets:2},
+      {t:"push",n:"Overhead cable extension · 12–15",sets:1}]},
+  ]},
+  {id:"p2",day:2,type:"pull",short:"Pull A",
+   title:"Pull A — Back · Biceps · Core",sub:"15 sets · 5 per muscle",
+   ss:[
+    {lbl:"Back",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Barbell bent-over row · 6–8",sets:2},
+      {t:"pull",n:"Lat pulldown · 8–10",sets:2},
+      {t:"pull",n:"Straight-arm pulldown · 12–15",sets:1}]},
+    {lbl:"Biceps",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Barbell curl · 8–10",sets:2},
+      {t:"pull",n:"Incline DB curl · 10–12",sets:2},
+      {t:"pull",n:"Hammer curl · 12–15",sets:1}]},
+    {lbl:"Core",reps:"5 sets",defSets:2,ex:[
+      {t:"functional",n:"Hanging leg raise · 12–15",sets:2},
+      {t:"functional",n:"Cable crunch · 12–15",sets:2},
+      {t:"functional",n:"Pallof press · 12 / side",sets:1}]},
+  ]},
+  {id:"p3",day:3,type:"legs",short:"Legs A",
+   title:"Legs A — Quads · Hamstrings · Glutes",sub:"15 sets · 5 per muscle · quad emphasis",
+   ss:[
+    {lbl:"Quads",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Back squat (or hack squat) · 6–8",sets:2},
+      {t:"push",n:"Leg press · 10–12",sets:2},
+      {t:"push",n:"Leg extension · 15",sets:1}]},
+    {lbl:"Hamstrings",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Romanian deadlift (moderate) · 8–10",sets:2},
+      {t:"pull",n:"Seated leg curl · 10–12",sets:2},
+      {t:"pull",n:"Lying leg curl · 15",sets:1}]},
+    {lbl:"Glutes",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Barbell hip thrust · 8–10",sets:2},
+      {t:"push",n:"DB walking lunge · 10–12",sets:2},
+      {t:"pull",n:"Hip abduction machine · 15",sets:1}]},
+  ]},
+  {id:"p4",day:4,type:"push",short:"Push B",
+   title:"Push B — Shoulders · Chest · Triceps",sub:"15 sets · 5 per muscle · vertical emphasis",
+   ss:[
+    {lbl:"Shoulders",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Standing barbell overhead press · 6–8",sets:2},
+      {t:"push",n:"DB lateral raise · 12–15",sets:2},
+      {t:"push",n:"Rear-delt fly · 15",sets:1}]},
+    {lbl:"Chest",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Incline barbell press · 8–10",sets:2},
+      {t:"push",n:"Weighted dip · 8–10",sets:2},
+      {t:"push",n:"Cable fly · 12–15",sets:1}]},
+    {lbl:"Triceps",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Overhead DB extension · 10–12",sets:2},
+      {t:"push",n:"Cable pushdown · 12–15",sets:2},
+      {t:"push",n:"Cable kickback · 15",sets:1}]},
+  ]},
+  {id:"p5",day:5,type:"pull",short:"Pull B",
+   title:"Pull B — Back · Biceps · Core",sub:"15 sets · 5 per muscle · width emphasis",
+   ss:[
+    {lbl:"Back",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Weighted pull-up · 6–8",sets:2},
+      {t:"pull",n:"Chest-supported row · 8–10",sets:2},
+      {t:"pull",n:"Face pull · 15",sets:1}]},
+    {lbl:"Biceps",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Preacher curl · 8–10",sets:2},
+      {t:"pull",n:"Cable curl · 10–12",sets:2},
+      {t:"pull",n:"Concentration curl · 12–15",sets:1}]},
+    {lbl:"Core",reps:"5 sets",defSets:2,ex:[
+      {t:"functional",n:"Ab-wheel rollout · 10–12",sets:2},
+      {t:"functional",n:"Weighted Russian twist · 15 / side",sets:2},
+      {t:"functional",n:"Side plank · 30–45 s / side",sets:1}]},
+  ]},
+  {id:"p6",day:6,type:"legs",short:"Legs B",
+   title:"Legs B — Hamstrings · Glutes · Quads",sub:"15 sets · 5 per muscle · posterior emphasis",
+   ss:[
+    {lbl:"Hamstrings",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Lying leg curl · 10–12",sets:2},
+      {t:"pull",n:"Good morning (light) / Nordic · 8–10",sets:2},
+      {t:"pull",n:"Seated leg curl · 15",sets:1}]},
+    {lbl:"Glutes",reps:"5 sets",defSets:2,ex:[
+      {t:"pull",n:"Barbell hip thrust · 8–10",sets:2},
+      {t:"push",n:"Bulgarian split squat · 10–12",sets:2},
+      {t:"pull",n:"Cable pull-through · 15",sets:1}]},
+    {lbl:"Quads",reps:"5 sets",defSets:2,ex:[
+      {t:"push",n:"Hack squat · 8–10",sets:2},
+      {t:"push",n:"Leg extension · 12–15",sets:2},
+      {t:"push",n:"Goblet squat · 15",sets:1}]},
+  ]},
+];
+
+/* Backup routine: original 6-day superset plan */
+const ROUTINE_SUPERSET = [
   {id:"d1",day:1,type:"upper",short:"Upper A",
    title:"Upper A — Horizontal Push/Pull",sub:"Chest · Back · Arms",
    ss:[
@@ -338,16 +464,36 @@ const PLAN = [
   ]},
 ];
 
+/* ═══════════════ ROUTINES REGISTRY ═══════════════ */
+const ROUTINES = {
+  "215":      {name:"2-5-15",  meta:"PPL ×2",   days:ROUTINE_215},
+  "superset": {name:"Superset",meta:"Backup",   days:ROUTINE_SUPERSET},
+};
+const ROUTINE_ORDER = ["215","superset"];
+function allDays(){ return [...ROUTINE_215, ...ROUTINE_SUPERSET]; }
+function findDay(id){ return allDays().find(d=>d.id===id); }
+
 /* ═══════════════ STATE ═══════════════ */
 const SK = "wt_v3";
 let S = (() => { try{ return JSON.parse(localStorage.getItem(SK)||"null")||{config:{},sessions:{}}; }catch(e){ return {config:{},sessions:{}}; } })();
+if(!S.config) S.config={};
+if(!S.sessions) S.sessions={};
+if(!ROUTINES[S.routine]) S.routine="215";   // default to the active 2-5-15 routine
 const THEME_KEY = "wt_theme";
+
+let PLAN = ROUTINES[S.routine].days;          // active routine (re-pointed on switch)
 
 function save(){ localStorage.setItem(SK, JSON.stringify(S)); }
 function today(){ return new Date().toISOString().slice(0,10); }
 
+function setRoutine(id){
+  if(!ROUTINES[id]) return;
+  S.routine=id; PLAN=ROUTINES[id].days; save();
+  goHome();
+}
+
 function getDayConfig(dayId){
-  if(!S.config[dayId]){ S.config[dayId]={ssOrder:PLAN.find(d=>d.id===dayId).ss.map((_,i)=>i)}; save(); }
+  if(!S.config[dayId]){ S.config[dayId]={ssOrder:findDay(dayId).ss.map((_,i)=>i)}; save(); }
   return S.config[dayId];
 }
 function getSession(dayId, date){
@@ -357,7 +503,10 @@ function getSession(dayId, date){
 }
 function getSetCount(sess,ssIdx,exIdx){
   const k=`${ssIdx}-${exIdx}`;
-  if(sess.setCount[k]==null){ sess.setCount[k]=PLAN.find(d=>d.id===sess.dayId).ss[ssIdx].defSets; }
+  if(sess.setCount[k]==null){
+    const day=findDay(sess.dayId), ss=day.ss[ssIdx], ex=ss.ex[exIdx];
+    sess.setCount[k]=(ex && ex.sets!=null)?ex.sets:ss.defSets;
+  }
   return sess.setCount[k];
 }
 function getSetData(sess,ssIdx,exIdx,setIdx){
@@ -475,15 +624,26 @@ function updateTimerUI(){
 }
 
 /* ═══════════════ HOME ═══════════════ */
+const TYPE_LABEL={upper:"Upper",lower:"Lower",push:"Push",pull:"Pull",legs:"Legs"};
+
 function renderHome(){
   const t=today();
+  // Routine switcher
+  document.getElementById("routine-switch").innerHTML=ROUTINE_ORDER.map(rid=>{
+    const r=ROUTINES[rid], active=rid===S.routine;
+    return `<button class="rs-btn ${active?"active":""}" onclick="setRoutine('${rid}')">
+      <span class="rs-name">${r.name}</span>
+      <span class="rs-meta">${active?"Active · "+r.meta:r.meta}</span>
+    </button>`;
+  }).join("");
+
   // Quick strip — 2×3 grid, no day labels
   document.getElementById("quick-strip").innerHTML=PLAN.map(d=>{
     const sess=getSession(d.id,t);
     const {done,total}=countDone(sess,d);
     const isDone=done>0&&done>=total;
     return `<div class="qs-card ${d.type}${isDone?" done":""}" onclick="openDay('${d.id}')">
-      <span class="qs-type">${d.type==="upper"?"Upper":"Lower"}</span>
+      <span class="qs-type">${TYPE_LABEL[d.type]||d.type}</span>
       <span class="qs-name">${d.short.split(" ")[1]}</span>
     </div>`;
   }).join("");
@@ -602,7 +762,9 @@ function setReps(ssIdx,exIdx,setIdx,val){  const sess=getSession(currentDayId,to
 function adjustSets(ssIdx,exIdx,delta){
   const sess=getSession(currentDayId,today());
   const k=`${ssIdx}-${exIdx}`;
-  sess.setCount[k]=Math.max(1,Math.min(8,(sess.setCount[k]||PLAN.find(d=>d.id===currentDayId).ss[ssIdx].defSets)+delta));
+  const ex=findDay(currentDayId).ss[ssIdx].ex[exIdx];
+  const base=(ex && ex.sets!=null)?ex.sets:findDay(currentDayId).ss[ssIdx].defSets;
+  sess.setCount[k]=Math.max(1,Math.min(8,(sess.setCount[k]||base)+delta));
   save(); renderDay();
 }
 function moveSS(dispIdx,dir){
@@ -628,7 +790,7 @@ function renderCalendar(){
     const ds=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
     const sess=Object.values(S.sessions).filter(s=>s.date===ds);
     const hasW=sess.length>0;
-    const wType=hasW?(PLAN.find(p=>p.id===sess[0].dayId)||{}).type||"":"";
+    const wType=hasW?(findDay(sess[0].dayId)||{}).type||"":"";
     const isTod=ds===todayStr, isSel=ds===calSelectedDate;
     html+=`<div class="cal-day ${hasW?"has-workout":""} ${wType} ${isTod?"today":""} ${isSel?"selected":""}"
       onclick="selectCalDate('${ds}')">
@@ -652,7 +814,7 @@ function renderCalLog(ds){
   if(!sessions.length){ logEl.innerHTML=`<div class="cal-empty">No workout logged on this day.</div>`; return; }
   let html="";
   sessions.forEach(sess=>{
-    const day=PLAN.find(p=>p.id===sess.dayId); if(!day) return;
+    const day=findDay(sess.dayId); if(!day) return;
     const cfg=getDayConfig(sess.dayId);
     const {done,total}=countDone(sess,day);
     html+=`<div class="cal-entry">
@@ -701,9 +863,10 @@ function renderProgress(){
     const {done,total}=countDone(sess,d);
     totalDone+=done; totalAll+=total;
     const pct=total>0?Math.round(done/total*100):0;
+    const tvar={upper:"--blue",lower:"--amber",push:"--push",pull:"--pull",legs:"--amber"}[d.type]||"--blue";
     html+=`<div class="prog-row">
       <div class="prog-row-top"><span class="prog-row-name">${d.short}</span><span class="prog-row-val">${done}/${total}</span></div>
-      <div class="prog-bar2"><div class="prog-fill2" style="width:${pct}%;background:${pct===100?"var(--green)":d.type==="upper"?"var(--blue)":"var(--amber)"}"></div></div>
+      <div class="prog-bar2"><div class="prog-fill2" style="width:${pct}%;background:${pct===100?"var(--green)":"var("+tvar+")"}"></div></div>
     </div>`;
   });
 
@@ -714,7 +877,7 @@ function renderProgress(){
     <div style="font-size:52px;font-weight:300;padding:8px 0">${wp}%</div>
     <div style="font-size:12px;color:var(--text2)">${totalDone} of ${totalAll} sets across all workouts</div>
   </div>
-  <button onclick="if(confirm('Reset ALL progress and history?')){S={config:{},sessions:{}};save();renderProgress();renderHome();}"
+  <button onclick="if(confirm('Reset ALL progress and history?')){S={config:{},sessions:{},routine:S.routine};save();renderProgress();renderHome();}"
     style="width:100%;padding:13px;background:var(--bg2);border:1px solid var(--border);color:var(--text3);border-radius:var(--r);font-size:13px;cursor:pointer">
     Reset all data
   </button>`;
